@@ -1,6 +1,6 @@
 name: sm_view_model
 description: ViewModel
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/smartwalle/sm_view_model
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^4.3.2+2
+  provider: ">=4.0.0"
 
 dev_dependencies:
   flutter_test:

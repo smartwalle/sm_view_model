@@ -4,13 +4,15 @@ import 'package:provider/provider.dart';
 class ViewModelWidget<T extends ChangeNotifier> extends StatefulWidget {
   final T model;
   final Function(T) onModelReady;
-  final Widget Function(BuildContext context, T model) builder;
+  final Widget Function(BuildContext context, T model, Widget child) builder;
+  final Widget child;
 
   ViewModelWidget({
     Key key,
     @required this.model,
     this.onModelReady,
     @required this.builder,
+    this.child,
   })  : assert(builder != null),
         assert(model != null),
         super(key: key);
@@ -33,13 +35,10 @@ class _ViewModelWidgetState<T extends ChangeNotifier> extends State<ViewModelWid
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<T>(
-      create: (ctx) {
-        return widget.model;
-      },
+      create: (ctx) => widget.model,
       child: Consumer<T>(
-        builder: (BuildContext ctx, T value, Widget child) {
-          return widget.builder(ctx, value);
-        },
+        child: widget.child,
+        builder: widget.builder,
       ),
     );
   }

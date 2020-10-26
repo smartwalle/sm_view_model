@@ -25,6 +25,8 @@ class ViewModelBuilder<T extends ChangeNotifier> extends StatefulWidget {
 class _ViewModelBuilderState<T extends ChangeNotifier> extends State<ViewModelBuilder<T>> {
   @override
   void initState() {
+    super.initState();
+
     T model = widget.model;
 
     if (model == null) {
@@ -34,7 +36,6 @@ class _ViewModelBuilderState<T extends ChangeNotifier> extends State<ViewModelBu
     if (widget.onModelReady != null && model != null) {
       widget.onModelReady(model);
     }
-    super.initState();
   }
 
   @override

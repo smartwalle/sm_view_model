@@ -1,6 +1,6 @@
 name: sm_view_model
 description: ViewModel
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/smartwalle/sm_view_model
 
 environment:

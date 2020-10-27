@@ -14,6 +14,7 @@ class ViewModelBuilder<T extends ChangeNotifier> extends StatefulWidget {
     this.child,
     @required this.builder,
   })  : assert(builder != null),
+        assert(model != null),
         super(key: key);
 
   @override
@@ -25,33 +26,23 @@ class ViewModelBuilder<T extends ChangeNotifier> extends StatefulWidget {
 class _ViewModelBuilderState<T extends ChangeNotifier> extends State<ViewModelBuilder<T>> {
   @override
   void initState() {
-    super.initState();
-
     T model = widget.model;
-
-    if (model == null) {
-      model = Provider.of<T>(this.context, listen: false);
-    }
 
     if (widget.onModelReady != null && model != null) {
       widget.onModelReady(model);
     }
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.model != null) {
-      return ChangeNotifierProvider<T>(
-        create: (ctx) => widget.model,
-        child: Consumer<T>(
-          child: widget.child,
-          builder: widget.builder,
-        ),
-      );
-    }
-    return Consumer<T>(
-      child: widget.child,
-      builder: widget.builder,
+    return ChangeNotifierProvider<T>(
+      create: (ctx) => widget.model,
+      child: Consumer<T>(
+        child: widget.child,
+        builder: widget.builder,
+      ),
     );
   }
 }

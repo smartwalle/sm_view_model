@@ -17,12 +17,10 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
     @required this.builder,
     this.consumer = true,
   })  : assert(builder != null),
-        assert(model != null),
         super(key: key);
 
   @override
   _ViewModelBuilderState<T> createState() {
-    print("createState");
     return _ViewModelBuilderState<T>();
   }
 }
@@ -32,37 +30,52 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
 
   @override
   void initState() {
-    _model = widget.model;
+    super.initState();
 
-    print("init state");
+    if (widget.model != null) {
+      _model = widget.model;
+    }
+
+    if (_model == null) {
+      _model = Provider.of(context, listen: false);
+    }
 
     if (widget.onModelReady != null && _model != null) {
       widget.onModelReady(_model);
     }
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("====== ${_model}");
+    assert(_model != null);
 
-    if (widget.consumer) {
+    if (widget.model != null) {
+      if (widget.consumer) {
+        return ChangeNotifierProvider<T>(
+          create: (ctx) => _model,
+          child: Consumer<T>(
+            child: widget.child,
+            builder: widget.builder,
+          ),
+        );
+      }
+
       return ChangeNotifierProvider<T>(
         create: (ctx) => _model,
-        child: Consumer<T>(
-          child: widget.child,
-          builder: widget.builder,
-        ),
+        child: widget.child,
+        builder: (ctx, child) {
+          return widget.builder(ctx, Provider.of(ctx, listen: false), child);
+        },
       );
     }
 
-    return ChangeNotifierProvider<T>(
-      create: (ctx) => _model,
-      child: widget.child,
-      builder: (ctx, child) {
-        return widget.builder(ctx, _model, child);
-      },
-    );
+    if (widget.consumer) {
+      return Consumer<T>(
+        child: widget.child,
+        builder: widget.builder,
+      );
+    }
+
+    return widget.builder(context, _model, widget.child);
   }
 }

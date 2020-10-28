@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sm_view_model/src/view_model.dart';
 
 class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
-  final T model;
+  final T Function() create;
   final Function(T) onModelReady;
   final Widget Function(BuildContext context, T model, Widget child) builder;
   final Widget child;
@@ -11,7 +11,7 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
 
   ViewModelBuilder({
     Key key,
-    this.model,
+    this.create,
     this.onModelReady,
     this.child,
     @required this.builder,
@@ -32,8 +32,8 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
   void initState() {
     super.initState();
 
-    if (widget.model != null) {
-      _model = widget.model;
+    if (widget.create != null) {
+      _model = widget.create();
     }
 
     if (_model == null) {
@@ -49,7 +49,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
   Widget build(BuildContext context) {
     assert(_model != null);
 
-    if (widget.model != null) {
+    if (widget.create != null) {
       if (widget.consumer) {
         return ChangeNotifierProvider<T>(
           create: (ctx) => _model,

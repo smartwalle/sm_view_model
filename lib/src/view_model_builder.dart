@@ -49,7 +49,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
 
     /// 优先复用
     if (widget.reuse) {
-      _model = Provider.of(context, listen: false);
+      _model = this.findViewModel();
     }
 
     /// 没有找到可复用的，则新建
@@ -58,12 +58,20 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
     }
 
     if (_model == null && widget.reuse == false) {
-      _model = Provider.of(context, listen: false);
+      _model = this.findViewModel();
     }
 
     if (widget.onModelReady != null && _model != null) {
       widget.onModelReady(_model);
     }
+  }
+
+  T findViewModel() {
+    T value;
+    try {
+      value = Provider.of(context, listen: false);
+    } catch (err) {}
+    return value;
   }
 
   @override

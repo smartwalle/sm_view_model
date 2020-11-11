@@ -42,6 +42,7 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
 
 class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder<T>> {
   T _model;
+  bool _reuse = false;
 
   @override
   void initState() {
@@ -50,6 +51,10 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
     /// 优先复用
     if (widget.reuse) {
       _model = this.findViewModel();
+
+      if (_model != null) {
+        _reuse = true;
+      }
     }
 
     /// 没有找到可复用的，则新建
@@ -59,6 +64,10 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
 
     if (_model == null && widget.reuse == false) {
       _model = this.findViewModel();
+
+      if (_model != null) {
+        _reuse = true;
+      }
     }
 
     if (widget.onModelReady != null && _model != null) {
@@ -78,7 +87,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
   Widget build(BuildContext context) {
     assert(_model != null);
 
-    if (widget.create != null) {
+    if (_reuse == false) {
       if (widget.consumer) {
         return ChangeNotifierProvider<T>(
           create: (ctx) => _model,
@@ -93,18 +102,26 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
         create: (ctx) => _model,
         child: widget.child,
         builder: (ctx, child) {
-          return widget.builder(ctx, Provider.of(ctx, listen: false), child);
+          return widget.builder(ctx, _model, child);
         },
       );
     }
 
+    print("reuse  ......");
+
     if (widget.consumer) {
-      return Consumer<T>(
-        child: widget.child,
-        builder: widget.builder,
+      return ChangeNotifierProvider.value(
+        value: _model,
+        child: Consumer<T>(
+          child: widget.child,
+          builder: widget.builder,
+        ),
       );
     }
 
-    return widget.builder(context, _model, widget.child);
+    return ChangeNotifierProvider.value(
+      value: _model,
+      child: widget.builder(context, _model, widget.child),
+    );
   }
 }

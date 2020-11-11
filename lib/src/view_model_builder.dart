@@ -107,8 +107,6 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
       );
     }
 
-    print("reuse  ......");
-
     if (widget.consumer) {
       return ChangeNotifierProvider.value(
         value: _model,

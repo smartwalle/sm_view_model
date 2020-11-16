@@ -10,7 +10,7 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
   final Function(T) onModelReady;
 
   /// 用于构建 [Widget]
-  final Widget Function(BuildContext context, T model, Widget child) builder;
+  final Widget Function(BuildContext context, T value, Widget child) builder;
 
   /// 将作为 [builder] 函数中的 child 参数
   final Widget child;

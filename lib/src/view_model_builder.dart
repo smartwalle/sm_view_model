@@ -42,7 +42,7 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
 
 class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder<T>> {
   T _model;
-  bool _reuse = false;
+  bool _reused = false;
 
   @override
   void initState() {
@@ -53,20 +53,21 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
       _model = this.findViewModel();
 
       if (_model != null) {
-        _reuse = true;
+        _reused = true;
       }
     }
 
-    /// 没有找到可复用的，则新建
+    /// 复用失败则新建
     if (_model == null && widget.create != null) {
       _model = widget.create();
     }
 
+    /// 新建失败并且为不优先复用，则查找
     if (_model == null && widget.reuse == false) {
       _model = this.findViewModel();
 
       if (_model != null) {
-        _reuse = true;
+        _reused = true;
       }
     }
 
@@ -85,9 +86,10 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
 
   @override
   Widget build(BuildContext context) {
+    print("_ViewModelBuilderState     build");
     assert(_model != null);
 
-    if (_reuse == false) {
+    if (_reused == false) {
       if (widget.consumer) {
         return ChangeNotifierProvider<T>(
           create: (ctx) => _model,

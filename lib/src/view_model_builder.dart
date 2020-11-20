@@ -12,6 +12,10 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
   /// 用于构建 [Widget]
   final Widget Function(BuildContext context, T model, Widget child) builder;
 
+  final Widget Function(BuildContext context, T model, Object error) onError;
+
+  final Widget Function(BuildContext context, T model) onWaiting;
+
   /// 将作为 [builder] 函数中的 child 参数
   final Widget child;
 
@@ -29,6 +33,8 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
     this.onModelReady,
     this.child,
     @required this.builder,
+    this.onError,
+    this.onWaiting,
     this.consumer = true,
     this.reuse = false,
   })  : assert(builder != null),
@@ -86,7 +92,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
 
   @override
   Widget build(BuildContext context) {
-    print("_ViewModelBuilderState     build");
+    print("_ViewModelBuilderState   ${_model}  build");
     assert(_model != null);
 
     if (_reused == false) {
@@ -95,7 +101,8 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
           create: (ctx) => _model,
           child: Consumer<T>(
             child: widget.child,
-            builder: widget.builder,
+            // builder: widget.builder,
+            builder: _build,
           ),
         );
       }
@@ -104,7 +111,8 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
         create: (ctx) => _model,
         child: widget.child,
         builder: (ctx, child) {
-          return widget.builder(ctx, _model, child);
+          // return widget.builder(ctx, _model, child);
+          return _build(ctx, _model, child);
         },
       );
     }
@@ -114,14 +122,34 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
         value: _model,
         child: Consumer<T>(
           child: widget.child,
-          builder: widget.builder,
+          // builder: widget.builder,
+          builder: _build,
         ),
       );
     }
 
     return ChangeNotifierProvider.value(
       value: _model,
-      child: widget.builder(context, _model, widget.child),
+      // child: widget.builder(context, _model, widget.child),
+      child: _build(context, _model, widget.child),
     );
+  }
+
+  Widget _build(BuildContext ctx, T model, Widget child) {
+    if (model.hasError && widget.onError != null) {
+      var errWidget = widget.onError(ctx, model, model.error);
+      if (errWidget != null) {
+        return errWidget;
+      }
+    }
+
+    if (model.isWaiting && widget.onWaiting != null) {
+      var waitingWidget = widget.onWaiting(ctx, model);
+      if (waitingWidget != null) {
+        return waitingWidget;
+      }
+    }
+
+    return widget.builder(ctx, model, child);
   }
 }

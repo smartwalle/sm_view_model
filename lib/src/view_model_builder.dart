@@ -12,8 +12,10 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
   /// 用于构建 [Widget]
   final Widget Function(BuildContext context, T model, Widget child) builder;
 
+  /// 当 [T] 的 [error] 属性不为 [null] 时，会优先构建本方法返回的 [Widget]
   final Widget Function(BuildContext context, T model, Object error) onError;
 
+  /// 当 [T] 的 [state] 属性为 [ViewModelState.waiting] 时，会构建本方法返回的 [Widget]
   final Widget Function(BuildContext context, T model) onWaiting;
 
   /// 将作为 [builder] 函数中的 child 参数
@@ -78,7 +80,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
     }
 
     if (widget.onModelReady != null && _model != null) {
-      widget.onModelReady(_model);
+      Future.microtask(() => widget.onModelReady(_model));
     }
   }
 
@@ -92,7 +94,6 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
 
   @override
   Widget build(BuildContext context) {
-    print("_ViewModelBuilderState   ${_model}  build");
     assert(_model != null);
 
     if (_reused == false) {

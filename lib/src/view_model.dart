@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 enum ViewModelState {
-  none,
+  _none,
   waiting,
   done,
 }
 
 class ViewModel extends ChangeNotifier {
   /// 状态信息
-  ViewModelState _state = ViewModelState.none;
+  ViewModelState _state = ViewModelState._none;
 
   ViewModelState get state => _state;
 
@@ -28,8 +28,16 @@ class ViewModel extends ChangeNotifier {
   }
 
   void done([Object error]) {
+    var notify = false;
+    if (_error != error || _state != ViewModelState.done) {
+      notify = true;
+    }
     _error = error;
-    this.state = ViewModelState.done;
+    _state = ViewModelState.done;
+
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   /// 错误信息

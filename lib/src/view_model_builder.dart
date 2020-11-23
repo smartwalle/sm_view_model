@@ -80,7 +80,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
     }
 
     if (widget.onModelReady != null && _model != null) {
-      Future.microtask(() => widget.onModelReady(_model));
+      widget.onModelReady(_model);
     }
   }
 

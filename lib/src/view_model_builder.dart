@@ -15,8 +15,8 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
   /// 当 [T] 的 [error] 属性不为 [null] 时，会优先构建本方法返回的 [Widget]
   final Widget Function(BuildContext context, T model, Object error) onError;
 
-  /// 当 [T] 的 [state] 属性为 [ViewModelState.waiting] 时，会构建本方法返回的 [Widget]
-  final Widget Function(BuildContext context, T model) onWaiting;
+  /// 当 [T] 的 [state] 属性为 [ViewModelState.loading] 时，会构建本方法返回的 [Widget]
+  final Widget Function(BuildContext context, T model) onLoading;
 
   /// 将作为 [builder] 函数中的 child 参数
   final Widget child;
@@ -36,7 +36,7 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
     this.child,
     @required this.builder,
     this.onError,
-    this.onWaiting,
+    this.onLoading,
     this.consumer = true,
     this.reuse = false,
   })  : assert(builder != null),
@@ -144,10 +144,10 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
       }
     }
 
-    if (model.isWaiting && widget.onWaiting != null) {
-      var waitingWidget = widget.onWaiting(ctx, model);
-      if (waitingWidget != null) {
-        return waitingWidget;
+    if (model.isLoading && widget.onLoading != null) {
+      var loadingWidget = widget.onLoading(ctx, model);
+      if (loadingWidget != null) {
+        return loadingWidget;
       }
     }
 

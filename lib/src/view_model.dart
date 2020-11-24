@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ViewModelState {
   _none,
-  waiting,
+  loading,
   done,
 }
 
@@ -12,7 +12,7 @@ class ViewModel extends ChangeNotifier {
 
   ViewModelState get state => _state;
 
-  bool get isWaiting => _state == ViewModelState.waiting;
+  bool get isLoading => _state == ViewModelState.loading;
 
   bool get isDone => _state == ViewModelState.done;
 
@@ -23,8 +23,8 @@ class ViewModel extends ChangeNotifier {
     }
   }
 
-  void waiting() {
-    this.state = ViewModelState.waiting;
+  void load() {
+    this.state = ViewModelState.loading;
   }
 
   void done([Object error]) {

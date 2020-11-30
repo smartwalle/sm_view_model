@@ -7,7 +7,7 @@ import 'package:sm_view_model/src/view_model.dart';
 /// Widget build(BuildContext context) {
 ///    return Scaffold(
 ///      body: ViewModelBuilder<ExampleViewModel>(
-///        provider: exampleViewModel,
+///        create: () => exampleViewModel,
 ///        onModelReady: (model) {
 ///          Future.microtask(() => model.count = 10);
 ///        },
@@ -19,7 +19,7 @@ import 'package:sm_view_model/src/view_model.dart';
 ///  }
 
 class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
-  final ProviderBase<Object, T> provider;
+  final ProviderBase<Object, T> Function() create;
 
   /// 当 [T] 准备完成之后的回调函数
   final Function(T model) onModelReady;
@@ -41,7 +41,7 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
 
   ViewModelBuilder({
     Key key,
-    @required this.provider,
+    @required this.create,
     @required this.builder,
     this.onModelReady,
     this.child,
@@ -59,10 +59,13 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
 
 class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder<T>> {
   T _model;
+  ProviderBase<Object, T> _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = widget.create();
 
     _model = this.findViewModel();
 
@@ -74,7 +77,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
   T findViewModel() {
     T value;
     try {
-      value = ProviderScope.containerOf(context, listen: false).read(widget.provider);
+      value = ProviderScope.containerOf(context, listen: false).read(_provider);
     } catch (err) {}
     return value;
   }
@@ -87,7 +90,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
       return Consumer(
         child: widget.child,
         builder: (context, watch, child) {
-          var model = watch(widget.provider);
+          var model = watch(_provider);
           return _build(context, model, child);
         },
       );

@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sm_view_model/src/view_model.dart';
 
+/// final exampleViewModel = ChangeNotifierProvider.autoDispose.call((ref) => ExampleViewModel());
+///
+/// Widget build(BuildContext context) {
+///    return Scaffold(
+///      body: ViewModelBuilder<ExampleViewModel>(
+///        provider: exampleViewModel,
+///        onModelReady: (model) {
+///          Future.microtask(() => model.count = 10);
+///        },
+///        builder: (context, model, child) {
+///          return Text("hello ${model.count}");
+///        },
+///      ),
+///    );
+///  }
+
 class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
-  /// 用于构建新的 [T] 对象
-  final T Function() create;
+  final ProviderBase<Object, T> provider;
 
   /// 当 [T] 准备完成之后的回调函数
   final Function(T model) onModelReady;
@@ -24,21 +39,15 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
   /// 是否需要将 [builder] 函数返回的 [Widget] 放置在 [Consumer] 中
   final bool consumer;
 
-  /// 是否优先复用原有 [T]
-  /// 如果为 true，则会优先查找到最近的可用的 [T]，当未找到可复用的 [T] 时，才会创建新的 [T]
-  /// 如果为 false，则每次都会创建新的 [T]
-  final bool reuse;
-
   ViewModelBuilder({
     Key key,
-    this.create,
+    @required this.provider,
+    @required this.builder,
     this.onModelReady,
     this.child,
-    @required this.builder,
     this.onError,
     this.onLoading,
     this.consumer = true,
-    this.reuse = false,
   })  : assert(builder != null),
         super(key: key);
 
@@ -50,34 +59,12 @@ class ViewModelBuilder<T extends ViewModel> extends StatefulWidget {
 
 class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder<T>> {
   T _model;
-  bool _reused = false;
 
   @override
   void initState() {
     super.initState();
 
-    /// 优先复用
-    if (widget.reuse) {
-      _model = this.findViewModel();
-
-      if (_model != null) {
-        _reused = true;
-      }
-    }
-
-    /// 复用失败则新建
-    if (_model == null && widget.create != null) {
-      _model = widget.create();
-    }
-
-    /// 新建失败并且为不优先复用，则查找
-    if (_model == null && widget.reuse == false) {
-      _model = this.findViewModel();
-
-      if (_model != null) {
-        _reused = true;
-      }
-    }
+    _model = this.findViewModel();
 
     if (widget.onModelReady != null && _model != null) {
       widget.onModelReady(_model);
@@ -87,7 +74,7 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
   T findViewModel() {
     T value;
     try {
-      value = Provider.of(context, listen: false);
+      value = ProviderScope.containerOf(context, listen: false).read(widget.provider);
     } catch (err) {}
     return value;
   }
@@ -96,44 +83,16 @@ class _ViewModelBuilderState<T extends ViewModel> extends State<ViewModelBuilder
   Widget build(BuildContext context) {
     assert(_model != null);
 
-    if (_reused == false) {
-      if (widget.consumer) {
-        return ChangeNotifierProvider<T>(
-          create: (ctx) => _model,
-          child: Consumer<T>(
-            child: widget.child,
-            // builder: widget.builder,
-            builder: _build,
-          ),
-        );
-      }
-
-      return ChangeNotifierProvider<T>(
-        create: (ctx) => _model,
+    if (widget.consumer) {
+      return Consumer(
         child: widget.child,
-        builder: (ctx, child) {
-          // return widget.builder(ctx, _model, child);
-          return _build(ctx, _model, child);
+        builder: (context, watch, child) {
+          var model = watch(widget.provider);
+          return _build(context, model, child);
         },
       );
     }
-
-    if (widget.consumer) {
-      return ChangeNotifierProvider.value(
-        value: _model,
-        child: Consumer<T>(
-          child: widget.child,
-          // builder: widget.builder,
-          builder: _build,
-        ),
-      );
-    }
-
-    return ChangeNotifierProvider.value(
-      value: _model,
-      // child: widget.builder(context, _model, widget.child),
-      child: _build(context, _model, widget.child),
-    );
+    return _build(context, _model, widget.child);
   }
 
   Widget _build(BuildContext ctx, T model, Widget child) {

@@ -1,5 +1,5 @@
 enum LoadState {
-  init, // 初始
+  initial, // 初始
   loading, // 加载中
   finished, // 完成
 }
@@ -7,14 +7,14 @@ enum LoadState {
 class ViewState<T> {
   ViewState({
     this.data,
-    this.state = LoadState.init,
+    this.state = LoadState.initial,
     this.error,
   });
 
   // 状态
-  LoadState state = LoadState.init;
+  LoadState state = LoadState.initial;
 
-  bool get isInit => state == LoadState.init;
+  bool get isInitial => state == LoadState.initial;
 
   bool get isLoading => state == LoadState.loading;
 

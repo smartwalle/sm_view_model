@@ -22,7 +22,7 @@ class ViewModel<T> extends StateNotifier<ViewState<T>> {
 
   @protected
   bool get isInit {
-    return state.isInit;
+    return state.isInitial;
   }
 
   @protected

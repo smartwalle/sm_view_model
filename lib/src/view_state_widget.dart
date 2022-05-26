@@ -2,6 +2,15 @@ import 'package:flutter/widgets.dart';
 import 'package:sm_view_state/src/view_state.dart';
 
 class ViewStateWidget<T> extends StatelessWidget {
+  const ViewStateWidget({
+    Key? key,
+    required this.state,
+    required this.builder,
+    this.initial,
+    this.loading,
+    this.error,
+  }) : super(key: key);
+
   final ViewState<T> state;
 
   /// 当 [ViewState] 的 [state] 属性为 [LoadState.finished] 时，会构建本方法返回的 [Widget]
@@ -16,15 +25,6 @@ class ViewStateWidget<T> extends StatelessWidget {
 
   /// 当 [ViewState] 的 [error] 属性不为 [null] 时，会优先构建本方法返回的 [Widget]
   final Widget Function(BuildContext context, Object error)? error;
-
-  const ViewStateWidget({
-    Key? key,
-    required this.state,
-    required this.builder,
-    this.initial,
-    this.loading,
-    this.error,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

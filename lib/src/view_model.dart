@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sm_view_state/src/view_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class ViewModel<T> extends StateNotifier<ViewState<T>> {
-  ViewModel(T? data) : super(ViewState<T>(data: data));
+class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
+  KIViewModel(T? data) : super(KIViewState<T>(data: data));
 
   @protected
   T? get data {
@@ -36,7 +36,7 @@ class ViewModel<T> extends StateNotifier<ViewState<T>> {
   }
 
   @override
-  ViewState<T> get state {
+  KIViewState<T> get state {
     return super.state;
   }
 
@@ -48,7 +48,7 @@ class ViewModel<T> extends StateNotifier<ViewState<T>> {
     state = state.finish(data, error);
   }
 
-  updateState(ViewState<T> nState) {
+  updateState(KIViewState<T> nState) {
     state = nState;
   }
 }

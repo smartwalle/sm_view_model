@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:sm_view_state/src/view_state.dart';
 
-class ViewStateWidget<T> extends StatelessWidget {
-  const ViewStateWidget({
+class KIViewStateWidget<T> extends StatelessWidget {
+  const KIViewStateWidget({
     Key? key,
     required this.state,
     required this.builder,
@@ -11,19 +11,19 @@ class ViewStateWidget<T> extends StatelessWidget {
     this.error,
   }) : super(key: key);
 
-  final ViewState<T> state;
+  final KIViewState<T> state;
 
-  /// 当 [ViewState] 的 [state] 属性为 [LoadState.finished] 时，会构建本方法返回的 [Widget]
-  /// 当 [ViewState] 的 [state] 属性不为 [LoadState.finished]，但是没有提供相应状态的 [Widget]，也会构建本方法返回的 [Widget]
-  final Widget Function(BuildContext context, ViewState<T> state) builder;
+  /// 当 [KIViewState] 的 [state] 属性为 [KILoadState.finished] 时，会构建本方法返回的 [Widget]
+  /// 当 [KIViewState] 的 [state] 属性不为 [KILoadState.finished]，但是没有提供相应状态的 [Widget]，也会构建本方法返回的 [Widget]
+  final Widget Function(BuildContext context, KIViewState<T> state) builder;
 
-  /// 当 [ViewState] 的 [state] 属性为 [LoadState.initial] 时，会构建本方法返回的 [Widget]
-  final Widget Function(BuildContext context, ViewState<T> state)? initial;
+  /// 当 [KIViewState] 的 [state] 属性为 [KILoadState.initial] 时，会构建本方法返回的 [Widget]
+  final Widget Function(BuildContext context, KIViewState<T> state)? initial;
 
-  /// 当 [ViewState] 的 [state] 属性为 [LoadState.loading] 时，会构建本方法返回的 [Widget]
-  final Widget Function(BuildContext context, ViewState<T> state)? loading;
+  /// 当 [KIViewState] 的 [state] 属性为 [KILoadState.loading] 时，会构建本方法返回的 [Widget]
+  final Widget Function(BuildContext context, KIViewState<T> state)? loading;
 
-  /// 当 [ViewState] 的 [error] 属性不为 [null] 时，会优先构建本方法返回的 [Widget]
+  /// 当 [KIViewState] 的 [error] 属性不为 [null] 时，会优先构建本方法返回的 [Widget]
   final Widget Function(BuildContext context, Object error)? error;
 
   @override

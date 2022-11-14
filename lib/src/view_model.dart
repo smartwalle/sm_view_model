@@ -48,7 +48,7 @@ class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
     state = state.finish(data, error);
   }
 
-  updateState(KIViewState<T> nState) {
-    state = nState;
+  reset(KILoadState nState, [T? data, Object? error]) {
+    state = KIViewState<T>(data: data, state: nState, error: error);
   }
 }

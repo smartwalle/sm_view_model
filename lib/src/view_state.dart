@@ -6,8 +6,8 @@ enum KILoadState {
 
 class KIViewState<T> {
   KIViewState({
-    this.data,
     this.state = KILoadState.initial,
+    this.data,
     this.error,
   });
 

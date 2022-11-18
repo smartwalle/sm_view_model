@@ -24,12 +24,12 @@ class KIViewStateWidget<T> extends StatelessWidget {
   final Widget Function(BuildContext context, KIViewState<T> state)? loading;
 
   /// 当 [KIViewState] 的 [error] 属性不为 [null] 并且 [state] 属性为 [KILoadState.finished] 时，会优先构建本方法返回的 [Widget]
-  final Widget Function(BuildContext context, Object error)? failure;
+  final Widget Function(BuildContext context, KIViewState<T> state, Object error)? failure;
 
   @override
   Widget build(BuildContext context) {
     if (state.isFailed && failure != null) {
-      return failure!(context, state.error!);
+      return failure!(context, state, state.error!);
     }
     if (state.isInitial && initial != null) {
       return initial!(context, state);

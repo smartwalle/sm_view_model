@@ -20,13 +20,13 @@ class KIViewState<T> {
 
   bool get isFinished => state == KILoadState.finished;
 
+  bool get isFailed => state == KILoadState.finished && error != null;
+
   // 数据
   T? data;
 
   // 错误
   Object? error;
-
-  bool get hasError => error != null;
 
   /// 复制一份 [KIViewState]。
   KIViewState<T> copy() {
@@ -58,7 +58,7 @@ class KIViewState<T> {
 
   /// 构建并返回一个 [KIViewState] 的实例，其状态为 [KILoadState.finished]。
   /// 新 [KIViewState] 实例将继承原有数据，其错误信息会用参数 [error] 更新。
-  KIViewState<T> finishWithError(Object error) {
+  KIViewState<T> fail(Object error) {
     var nState = KIViewState<T>(data: data);
     nState.state = KILoadState.finished;
     nState.error = error;

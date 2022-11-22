@@ -38,10 +38,10 @@ class KIViewState<T> {
   }
 
   /// 构建并返回一个 [KIViewState] 的实例，其状态为 [KILoadState.loading]。
-  /// 如果参数 data 为 null，则新 [KIViewState] 实例将继承原有数据。
+  /// 如果参数 data 为 null 并且 force 为 false，则新 [KIViewState] 实例将继承原有数据。
   /// 错误信息不会被继承。
-  KIViewState<T> load([T? data]) {
-    var nState = KIViewState<T>(data: data ?? this.data);
+  KIViewState<T> load([T? data, bool force = false]) {
+    var nState = KIViewState<T>(data: force ? data : data ?? this.data);
     nState.state = KILoadState.loading;
     nState.error = null;
     return nState;

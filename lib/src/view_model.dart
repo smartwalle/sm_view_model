@@ -33,8 +33,8 @@ class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
     return super.state;
   }
 
-  load([T? data]) {
-    state = state.load(data);
+  load([T? data, bool force = false]) {
+    state = state.load(data, force);
   }
 
   finish([T? data, Object? error]) {

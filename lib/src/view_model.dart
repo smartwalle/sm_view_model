@@ -24,8 +24,8 @@ class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
     return state.isFinished;
   }
 
-  bool get isFailed {
-    return state.isFailed;
+  bool get isFailure {
+    return state.isFailure;
   }
 
   @override
@@ -45,7 +45,7 @@ class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
     state = state.fail(error);
   }
 
-  refresh(KILoadState nState, [T? data, Object? error]) {
-    state = KIViewState<T>(data: data, state: nState, error: error);
+  refresh(KIViewStateType type, [T? data, Object? error]) {
+    state = KIViewState<T>(data: data, type: type, error: error);
   }
 }

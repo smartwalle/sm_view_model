@@ -1,8 +1,8 @@
-import 'package:sm_view_state/src/view_state.dart';
+import 'package:sm_view_state/src/view_model_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
-  KIViewModel(T? data) : super(KIViewState<T>(data: data));
+class KIViewModel<T> extends StateNotifier<KIViewModelState<T>> {
+  KIViewModel(T? data) : super(KIViewModelState<T>(data: data));
 
   T? get data {
     return state.data;
@@ -29,7 +29,7 @@ class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
   }
 
   @override
-  KIViewState<T> get state {
+  KIViewModelState<T> get state {
     return super.state;
   }
 
@@ -45,7 +45,7 @@ class KIViewModel<T> extends StateNotifier<KIViewState<T>> {
     state = state.fail(error);
   }
 
-  refresh(KIViewStateType type, [T? data, Object? error]) {
-    state = KIViewState<T>(data: data, type: type, error: error);
+  refresh(KIViewModelStateType type, [T? data, Object? error]) {
+    state = KIViewModelState<T>(data: data, type: type, error: error);
   }
 }

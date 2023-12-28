@@ -8,12 +8,12 @@ class Book {
   String author = "";
 }
 
-final bookProvider = StateNotifierProvider<BookViewModel, ViewState<Book>>((ref) {
+final bookProvider = StateNotifierProvider<BookViewModel, KIViewModelState<Book>>((ref) {
   return BookViewModel();
 });
 
-// 继承自 ViewModel
-class BookViewModel extends ViewModel<Book> {
+// 继承自 KIViewModel
+class BookViewModel extends KIViewModel<Book> {
 
   BookViewModel() : super(null);
 

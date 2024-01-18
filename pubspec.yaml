@@ -1,10 +1,10 @@
 name: sm_view_model
 description: ViewModel
-version: 0.0.1
+version: 0.1.6
 homepage: https://github.com/smartwalle/sm_view_model
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:

@@ -1,4 +1,4 @@
-library sm_view_state;
+library sm_view_model;
 
 export 'src/view_model.dart';
 export 'src/view_model_state.dart';

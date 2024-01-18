@@ -1,4 +1,4 @@
-import 'package:sm_view_state/src/view_model_state.dart';
+import 'package:sm_view_model/src/view_model_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 class KIViewModel<T> extends StateNotifier<KIViewModelState<T>> {

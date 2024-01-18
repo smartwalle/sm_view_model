@@ -1,6 +1,6 @@
-### ViewState
+### ViewModel
 
-提供 ViewState，主要用于维护 View 所需的数据，需要配合 riverpod 进行使用。
+用于配合 riverpod 维护 View 所需的数据及状态。
 
 ```dart
 class Book {

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:sm_view_state/src/view_model_state.dart';
+import 'package:sm_view_model/src/view_model_state.dart';
 
 class KIViewModelStateWidget<T> extends StatelessWidget {
   const KIViewModelStateWidget({
